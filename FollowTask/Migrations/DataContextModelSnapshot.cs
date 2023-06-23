@@ -24,9 +24,11 @@ namespace FollowTask.Migrations
 
             modelBuilder.Entity("FollowTask.Data.Entities.Comment", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CommentBy")
                         .IsRequired()
@@ -39,8 +41,8 @@ namespace FollowTask.Migrations
                     b.Property<DateTime>("CommentTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("TaskId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("TaskId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -51,9 +53,11 @@ namespace FollowTask.Migrations
 
             modelBuilder.Entity("FollowTask.Data.Entities.Status", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -69,9 +73,11 @@ namespace FollowTask.Migrations
 
             modelBuilder.Entity("FollowTask.Data.Entities.TaskChangedLog", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ChangedBy")
                         .IsRequired()
@@ -80,20 +86,30 @@ namespace FollowTask.Migrations
                     b.Property<DateTime>("ChangedTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("NewStatusId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("NewStatusId")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("OldStatusId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("OldStatusId")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("TaskId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("StatusId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StatusId1")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TaskId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NewStatusId");
 
                     b.HasIndex("OldStatusId");
+
+                    b.HasIndex("StatusId");
+
+                    b.HasIndex("StatusId1");
 
                     b.HasIndex("TaskId");
 
@@ -102,12 +118,17 @@ namespace FollowTask.Migrations
 
             modelBuilder.Entity("FollowTask.Data.Entities.TaskData", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("CommentId")
-                        .HasColumnType("uniqueidentifier");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CommentId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CommentId1")
+                        .HasColumnType("int");
 
                     b.Property<string>("Data")
                         .IsRequired()
@@ -117,23 +138,32 @@ namespace FollowTask.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("TaskId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("TaskId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TasksId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CommentId");
 
+                    b.HasIndex("CommentId1");
+
                     b.HasIndex("TaskId");
+
+                    b.HasIndex("TasksId");
 
                     b.ToTable("TaskDatas");
                 });
 
             modelBuilder.Entity("FollowTask.Data.Entities.Tasks", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AssignTo")
                         .IsRequired()
@@ -150,8 +180,8 @@ namespace FollowTask.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("StatusId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
 
                     b.Property<int>("TagIds")
                         .HasColumnType("int");
@@ -173,8 +203,7 @@ namespace FollowTask.Migrations
                         .WithMany("Comment")
                         .HasForeignKey("TaskId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_Comment_Task");
+                        .IsRequired();
 
                     b.Navigation("Task");
                 });
@@ -182,18 +211,24 @@ namespace FollowTask.Migrations
             modelBuilder.Entity("FollowTask.Data.Entities.TaskChangedLog", b =>
                 {
                     b.HasOne("FollowTask.Data.Entities.Status", "NewStatus")
-                        .WithMany("NewStatus")
+                        .WithMany()
                         .HasForeignKey("NewStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_NewStatus_Status");
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("FollowTask.Data.Entities.Status", "OldStatus")
-                        .WithMany("OldStatus")
+                        .WithMany()
                         .HasForeignKey("OldStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_OldStatus_Status");
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FollowTask.Data.Entities.Status", null)
+                        .WithMany("NewStatus")
+                        .HasForeignKey("StatusId");
+
+                    b.HasOne("FollowTask.Data.Entities.Status", null)
+                        .WithMany("OldStatus")
+                        .HasForeignKey("StatusId1");
 
                     b.HasOne("FollowTask.Data.Entities.Tasks", "Task")
                         .WithMany("TaskChangedLog")
@@ -212,18 +247,26 @@ namespace FollowTask.Migrations
             modelBuilder.Entity("FollowTask.Data.Entities.TaskData", b =>
                 {
                     b.HasOne("FollowTask.Data.Entities.Comment", "Comment")
-                        .WithMany("TaskData")
+                        .WithMany()
                         .HasForeignKey("CommentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("FK_TaskData_Comment");
 
-                    b.HasOne("FollowTask.Data.Entities.Tasks", "Task")
+                    b.HasOne("FollowTask.Data.Entities.Comment", null)
                         .WithMany("TaskData")
+                        .HasForeignKey("CommentId1");
+
+                    b.HasOne("FollowTask.Data.Entities.Tasks", "Task")
+                        .WithMany()
                         .HasForeignKey("TaskId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("FK_TaskData_Task");
+
+                    b.HasOne("FollowTask.Data.Entities.Tasks", null)
+                        .WithMany("TaskData")
+                        .HasForeignKey("TasksId");
 
                     b.Navigation("Comment");
 

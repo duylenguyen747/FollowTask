@@ -4,7 +4,7 @@ namespace FollowTask.Data.Entities
 {
     public class Status
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public bool IsActive { get; set; }
         public virtual List<TaskChangedLog> OldStatus { get; set; }

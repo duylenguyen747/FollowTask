@@ -1,22 +1,22 @@
-﻿namespace FollowTask.Data.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace FollowTask.Data.Entities
 {
     public class TaskChangedLog
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string ChangedBy { get; set; }
         public DateTime ChangedTime { get; set; }
 
 
-
-        public Guid OldStatusId { get; set; }
+        public int OldStatusId { get; set; }
         public Status OldStatus { get; set; }
 
-
-        public Guid NewStatusId { get; set; }
+        public int NewStatusId { get; set; }
         public Status NewStatus { get; set; }
 
 
-        public Guid TaskId { get; set; }
+        public int TaskId { get; set; }
         public Tasks Task { get; set; }
     }
 }

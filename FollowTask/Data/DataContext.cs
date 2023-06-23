@@ -16,11 +16,6 @@ namespace FollowTask.Data
                 .HasForeignKey(x => x.StatusId)
                 .HasConstraintName("FK_Tasks_Status"); 
             modelBuilder.Entity<Tasks>()
-                .HasMany(c => c.Comment)
-                .WithOne(t => t.Task)
-                .HasForeignKey(c => c.TaskId)
-                .HasConstraintName("FK_Comment_Task");
-            modelBuilder.Entity<Tasks>()
                 .HasMany(c => c.TaskData)
                 .WithOne(t => t.Task)
                 .HasForeignKey(c => c.TaskId)
@@ -39,18 +34,36 @@ namespace FollowTask.Data
                 .HasConstraintName("FK_TaskData_Comment");
 
             // Relatinship Of Status
-            modelBuilder.Entity<Status>()
-                .HasMany(ot => ot.OldStatus)
-                .WithOne(s => s.OldStatus)
+            //modelBuilder.Entity<Status>()
+            //    .HasMany(ot => ot.OldStatus)
+            //    .WithOne(s => s.OldStatus)
+            //    .HasForeignKey(o => o.OldStatusId)
+            //    .HasConstraintName("FK_OldStatus_Status")
+            //    .OnDelete(DeleteBehavior.ClientNoAction);
+            //modelBuilder.Entity<Status>()
+            //    .HasMany(ot => ot.NewStatus)
+            //    .WithOne(s => s.NewStatus)
+            //    .HasForeignKey(n => n.NewStatusId)
+            //    .HasConstraintName("FK_NewStatus_Status")
+            //    .OnDelete(DeleteBehavior.ClientNoAction);
+            modelBuilder.Entity<TaskChangedLog>()
+                .HasOne(ol => ol.OldStatus)
+                .WithMany()
                 .HasForeignKey(o => o.OldStatusId)
-                .HasConstraintName("FK_OldStatus_Status");
-            modelBuilder.Entity<Status>()
-                .HasMany(ot => ot.NewStatus)
-                .WithOne(s => s.NewStatus)
-                .HasForeignKey(o => o.NewStatusId)
-                .HasConstraintName("FK_NewStatus_Status");
-
-
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<TaskChangedLog>()
+                .HasOne(n => n.NewStatus)
+                .WithMany()
+                .HasForeignKey(n => n.NewStatusId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<TaskData>()
+                .HasOne(ol => ol.Task)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<TaskData>()
+                .HasOne(ol => ol.Comment)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
             base.OnModelCreating(modelBuilder);
         }
 
