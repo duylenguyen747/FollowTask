@@ -51,9 +51,8 @@ namespace FollowTask.Controllers
         }
 
         // PUT: api/TaskChangedLogs/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTaskChangedLog(int id, TaskChangedLog taskChangedLog)
+        public async Task<IActionResult> CreateTaskChangedLog(int id, TaskChangedLog taskChangedLog)
         {
             if (id != taskChangedLog.Id)
             {
@@ -84,7 +83,7 @@ namespace FollowTask.Controllers
         // POST: api/TaskChangedLogs
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<TaskChangedLog>> PostTaskChangedLog(TaskChangedLog taskChangedLog)
+        public async Task<ActionResult<TaskChangedLog>> UpdateTaskChangedLog(TaskChangedLog taskChangedLog)
         {
           if (_context.TasksChangedLogs == null)
           {
